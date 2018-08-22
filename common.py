@@ -33,23 +33,23 @@ def download_images(root_path, type_name, type_id, size, reload=False):
         print('Pass: ' + url)
 
 
-def get_players_information_by_esi(players, reload=False):
+def get_players_information_by_esi(all_players, reload=False):
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs', 'players.json')
     if os.path.isfile(path):
         with open(path, 'r') as file:
-            all_players = json.load(file)
+            cache_players = json.load(file)
     else:
-        all_players = {
+        cache_players = {
             'character': {},
             'corporation': {},
             'alliance': {},
         }
 
-    for player_type, player_ids in players.items():
-        for player_id in player_ids:
+    for player_key, players in all_players.items():
+        for player_id in players.keys():
             player_id = str(player_id)
-            api_url = 'https://esi.evetech.net/latest/%ss/%s/' % (player_type, player_id)
-            if reload or player_id not in all_players[player_type]:
+            api_url = 'https://esi.evetech.net/latest/%ss/%s/' % (player_key, player_id)
+            if reload or player_id not in cache_players[player_key]:
                 while True:
                     try:
                         with urllib.request.urlopen(api_url) as url:
@@ -58,7 +58,7 @@ def get_players_information_by_esi(players, reload=False):
                             for key in ['name', 'ticker']:
                                 if key in json_dict:
                                     value[key] = json_dict[key]
-                            all_players[player_type][player_id] = value
+                            cache_players[player_key][player_id] = value
                         print('Download: ' + api_url)
                         break
                     except urllib.error.HTTPError:
@@ -69,10 +69,16 @@ def get_players_information_by_esi(players, reload=False):
                 print('Pass: ' + api_url)
 
     with open(path, 'w', encoding='utf-8') as file:
-        json.dump(all_players, file, indent=4)
+        json.dump(cache_players, file, indent=4)
 
-    result_players = {}
-    for player_type, player_ids in players.items():
-        result_players[player_type] = { str(player_id): all_players[player_type][str(player_id)] for player_id in player_ids }
+    players_information = OrderedDict()
+    for player_key, players in all_players.items():
+        players_information[player_key] = OrderedDict()
+        for player_id, player in players.items():
+            player_id = str(player_id)
+            dict_ = cache_players[player_key][player_id].copy()
+            for key, value in player.items():
+                dict_[key] = value
+            players_information[player_key][player_id] = dict_
 
-    return result_players
+    return players_information
