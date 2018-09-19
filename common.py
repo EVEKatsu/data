@@ -34,7 +34,7 @@ def download_images(root_path, type_name, type_id, size, reload=False):
 
 
 def get_players_information_by_esi(all_players, reload=False):
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs', 'players.json')
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs', 'players_information.json')
     if os.path.isfile(path):
         with open(path, 'r') as file:
             cache_players = json.load(file)
