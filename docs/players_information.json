@@ -1763,6 +1763,87 @@
         },
         "91987813": {
             "name": "Quote Mraz"
+        },
+        "2114417807": {
+            "name": "Queen of Puniana"
+        },
+        "2112886109": {
+            "name": "harpleaf longlife"
+        },
+        "93138099": {
+            "name": "Sophia G"
+        },
+        "93036125": {
+            "name": "Benkei Musashibou"
+        },
+        "95703047": {
+            "name": "Crystalized Experience"
+        },
+        "95439837": {
+            "name": "Yamainu JPN"
+        },
+        "96761011": {
+            "name": "Majdi Ronaldo"
+        },
+        "2112794638": {
+            "name": "Alihanna Riraille"
+        },
+        "96298273": {
+            "name": "flanker ekko"
+        },
+        "95967399": {
+            "name": "Nem Minimatar"
+        },
+        "2114330318": {
+            "name": "Victim Spade"
+        },
+        "2113672186": {
+            "name": "bubm Pserad"
+        },
+        "2114257346": {
+            "name": "Taiyou Hunt"
+        },
+        "2114071717": {
+            "name": "Chad Yukikaze"
+        },
+        "2114071668": {
+            "name": "Chad Inazuma"
+        },
+        "2114071683": {
+            "name": "Chad Ikazuchi"
+        },
+        "2114071656": {
+            "name": "Chad Hibiki"
+        },
+        "2114071595": {
+            "name": "Chad Akatsuki"
+        },
+        "2114071724": {
+            "name": "Chad Amatsukaze"
+        },
+        "2114071695": {
+            "name": "Chad Shimakaze"
+        },
+        "92934608": {
+            "name": "noraneko kizi"
+        },
+        "2113465178": {
+            "name": "chiva lie"
+        },
+        "1025850135": {
+            "name": "nemure"
+        },
+        "95739853": {
+            "name": "IWASHO"
+        },
+        "1157338300": {
+            "name": "TYHOON"
+        },
+        "95290147": {
+            "name": "Selfeel Crayzard-R"
+        },
+        "2112956693": {
+            "name": "mad Muutaras"
         }
     },
     "corporation": {
@@ -1941,6 +2022,22 @@
         "98571004": {
             "name": "Yoakemae G",
             "ticker": "YOA G"
+        },
+        "98572367": {
+            "name": "The Division.",
+            "ticker": "S-OWL"
+        },
+        "98574865": {
+            "name": "Platinum Sensitivity",
+            "ticker": "HISNS"
+        },
+        "98499913": {
+            "name": "Soyokaze Cosmos Service",
+            "ticker": "SOYOC"
+        },
+        "1431056470": {
+            "name": "Origin.",
+            "ticker": "0RIGN"
         }
     },
     "alliance": {
@@ -1995,6 +2092,10 @@
         "1006830534": {
             "name": "Fidelas Constans",
             "ticker": "FCON"
+        },
+        "99008244": {
+            "name": "Black Legion...",
+            "ticker": ".MEN."
         }
     }
 }

@@ -27,8 +27,8 @@ def download_images(root_path, type_name, type_id, size, reload=False):
                 break
             except urllib.error.HTTPError:
                 print('urllib.error.HTTPError: ' + url)
-                time.sleep(300)
-        time.sleep(10)
+                time.sleep(60)
+        time.sleep(2)
     else:
         print('Pass: ' + url)
 
@@ -63,8 +63,8 @@ def get_players_information_by_esi(all_players, reload=False):
                         break
                     except urllib.error.HTTPError:
                         print('urllib.error.HTTPError: ' + api_url)
-                        time.sleep(300)
-                time.sleep(10)
+                        time.sleep(60)
+                time.sleep(2)
             else:
                 print('Pass: ' + api_url)
 
