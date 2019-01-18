@@ -2057,6 +2057,21 @@
         },
         "95914831": {
             "name": "Pentium2"
+        },
+        "96477197": {
+            "name": "shiitake LC"
+        },
+        "2114251629": {
+            "name": "Lismo Kado"
+        },
+        "2114227041": {
+            "name": "Atoha"
+        },
+        "815944532": {
+            "name": "Xlucifer"
+        },
+        "96415667": {
+            "name": "CVT DETEINENPI"
         }
     },
     "corporation": {
@@ -2251,6 +2266,10 @@
         "1431056470": {
             "name": "Origin.",
             "ticker": "0RIGN"
+        },
+        "98354167": {
+            "name": "Moebiuslink-Fleet",
+            "ticker": "-MLF-"
         }
     },
     "alliance": {
