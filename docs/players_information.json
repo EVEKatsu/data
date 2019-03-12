@@ -2111,6 +2111,84 @@
         },
         "2114688813": {
             "name": "joe jeger"
+        },
+        "96798014": {
+            "name": "support yoshida"
+        },
+        "2114804629": {
+            "name": "Neru Naotsuka"
+        },
+        "2113209136": {
+            "name": "Ganasyu"
+        },
+        "2114754657": {
+            "name": "Yamoyosu"
+        },
+        "688503295": {
+            "name": "Scipiol"
+        },
+        "93681930": {
+            "name": "raira yuris"
+        },
+        "2112681936": {
+            "name": "Yoshiteru Ashikaga"
+        },
+        "2114532808": {
+            "name": "Jyami Kautsuo"
+        },
+        "2113819346": {
+            "name": "Rarai Tarai"
+        },
+        "2114791622": {
+            "name": "kasodani"
+        },
+        "2112772069": {
+            "name": "maihime key"
+        },
+        "2114958173": {
+            "name": "Jyami 2"
+        },
+        "1159150435": {
+            "name": "Apakamuy"
+        },
+        "2114885945": {
+            "name": "Renny Foster"
+        },
+        "2113910070": {
+            "name": "Kazunsa Sogo"
+        },
+        "2114604464": {
+            "name": "Varlam Egnald"
+        },
+        "2112086309": {
+            "name": "Sembro"
+        },
+        "93548124": {
+            "name": "KaGuRa Askiras"
+        },
+        "94105304": {
+            "name": "Ayaka Iida"
+        },
+        "2114431101": {
+            "name": "Alina Lozova"
+        },
+        "94861954": {
+            "name": "moxa stwd"
+        },
+        "2113118233": {
+            "name": "PafuPafuGirl"
+        },
+        "2112750414": {
+            "name": "foxt frddy"
+        },
+        "2114952562": {
+            "name": "BeepBoop 08102"
+        },
+        "2114709258": {
+            "name": "Chagama bunbuk"
+        },
+        "2114747946": {
+            "name": "Norwegian ForestCat"
         }
     },
     "corporation": {
@@ -2309,6 +2387,18 @@
         "98354167": {
             "name": "Moebiuslink-Fleet",
             "ticker": "-MLF-"
+        },
+        "98479939": {
+            "name": "New First Step",
+            "ticker": "N-F-S"
+        },
+        "98076780": {
+            "name": "Neo Academic Class Helping Office",
+            "ticker": "NACH0"
+        },
+        "98210283": {
+            "name": "NACHO Wormhole noT Found",
+            "ticker": "N404"
         }
     },
     "alliance": {
@@ -2367,6 +2457,10 @@
         "99008244": {
             "name": "Black Legion...",
             "ticker": ".MEN."
+        },
+        "99002055": {
+            "name": "NACHO Alliance",
+            "ticker": "NACHO"
         }
     }
 }
