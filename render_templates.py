@@ -1,6 +1,6 @@
 import os
 import json
-import copy
+import csv
 import datetime
 from collections import OrderedDict
 import jinja2
@@ -116,6 +116,7 @@ def generate_types():
         'items': [],
         'links': [
             url_tuple('Download JSON', BASE_URL + '/types.json', {'download': 'types.json'}),
+            url_tuple('Download CSV', BASE_URL + '/types.csv', {'download': 'types.csv'}),
             url_tuple('All Groups', siteurl + '/groups/'),
             url_tuple('All Types(Be careful because there is a lot)', siteurl + '/types/'),
         ],
@@ -171,6 +172,11 @@ def generate_types():
             dir_path = os.path.join(base_path, dir_name, '%s.html' % key)
             generate_languages_table(dir_path, values)
 
+    with open(os.path.join('.', 'docs', 'types.csv'), 'w') as file:
+        writer = csv.writer(file, lineterminator='\n')
+        writer.writerow(types['index']['header'])
+        writer.writerows(types['index']['items'])
+
 def generate_universes():
     siteurl = BASE_URL + '/universes'
     DEFAULT_RENDER_KWARGS['SITEURL'] = siteurl
@@ -201,8 +207,6 @@ def generate_universes():
         universe_id = region['universe_id']
         universe = UNIVERSES['universes'][str(universe_id)]
         universe_name = UNIVERSE_NAMES[universe['name']]
-
-        system_name = system['name']
 
         if universe_name not in regions:
             regions[universe_name] = {
@@ -268,6 +272,7 @@ def generate_universes():
         'items': [],
         'links': [
             url_tuple('Download JSON', BASE_URL + '/universes.json', {'download': 'universes.json'}),
+            url_tuple('Download CSV', BASE_URL + '/universes.csv', {'download': 'universes.csv'}),
             url_tuple('All Regions', siteurl + '/regions/'),
             url_tuple('All Constellations', siteurl + '/constellations/'),
             url_tuple('All Systems(Be careful because there is a lot)', siteurl + '/systems/'),
@@ -285,6 +290,11 @@ def generate_universes():
         for key, values in dict_.items():
             dir_path = os.path.join(base_path, dir_name, '%s.html' % key)
             generate_languages_table(dir_path, values)
+
+    with open(os.path.join('.', 'docs', 'universes.csv'), 'w') as file:
+        writer = csv.writer(file, lineterminator='\n')
+        writer.writerow(systems['index']['header'])
+        writer.writerows(systems['index']['items'])
 
 def main():
     generate_types()
