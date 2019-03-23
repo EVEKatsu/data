@@ -1,21 +1,130 @@
 import os
+import time
 import json
-import yaml
+import copy
 import zipfile
+import urllib.error
+import urllib.request
+import urllib.parse
 from collections import OrderedDict
 
+# pip install -r requirements.txt
+import yaml
+from bs4 import BeautifulSoup
 
-DEBUG = os.getenv('EVEKATSU_DEBUG') in ['True', 'true', 'TRUE']
+LANGUAGES = [
+    'de',
+    'en',
+    'fr',
+    'ja',
+    'ru',
+    'zh',
+]
 
-def get_sde_filename():
-    for filename in os.listdir():
-        base, ext = os.path.splitext(filename)
-        if ext == '.zip' and 'sde-' in base and '-TRANQUILITY' in base:
-            return filename
+TYPES_JSON_PATH = os.path.join('.', 'docs', 'types.json')
+
+UNIVERSES_JSON_PATH = os.path.join('.', 'docs', 'universes.json')
+UNIVERSE_IDS = OrderedDict(
+    eve=1,
+    wormhole=2,
+    abyssal=3,
+    penalty=4,
+)
+DEFAULT_UNIVERSES = OrderedDict()
+DEFAULT_UNIVERSES['1'] = OrderedDict(
+    name='eve',
+    de='eve',
+    en='eve',
+    fr='eve',
+    ja='\u30cb\u30e5\u30fc\u30a8\u30c7\u30f3',
+    ru='eve',
+    zh='eve',
+)
+DEFAULT_UNIVERSES['2'] = OrderedDict(
+    name='wormhole',
+    de='wormhole',
+    en='wormhole',
+    fr='wormhole',
+    ja='\u30ef\u30fc\u30e0\u30db\u30fc\u30eb',
+    ru='wormhole',
+    zh='wormhole',
+)
+DEFAULT_UNIVERSES['3'] = OrderedDict(
+    name='abyssal',
+    de='abyssal',
+    en='abyssal',
+    fr='abyssal',
+    ja='\u30a2\u30d3\u30b5\u30eb',
+    ru='abyssal',
+    zh='abyssal',
+)
+DEFAULT_UNIVERSES['4'] = OrderedDict(
+    name='penalty',
+    de='penalty',
+    en='penalty',
+    fr='penalty',
+    ja='\u30da\u30ca\u30eb\u30c6\u30a3',
+    ru='penalty',
+    zh='penalty',
+)
+
+SETTINGS_JSON_PATH = 'settings.json'
+DEFAULT_SETTINGS = {
+    'version': None,
+}
+
+def get_json_by_file(path):
+    if os.path.isfile(path):
+        with open(path, 'r') as file:
+            return json.load(file)
     return None
 
-def generate_sde_json():
-    # Only category IDs where the kill mail is issued.
+SETTINGS = get_json_by_file(SETTINGS_JSON_PATH)
+if not SETTINGS:
+    SETTINGS = copy.deepcopy(DEFAULT_SETTINGS)
+
+def get_json_by_url(url):
+    while(True):
+        try:
+            print('Download: ' + url)
+            with urllib.request.urlopen(url) as html:
+                data = json.loads(html.read().decode())
+            time.sleep(2)
+            return data
+        except urllib.error.HTTPError:
+            print('urllib.error.HTTPError: ' + url)
+            time.sleep(60)
+
+def get_supported_names(names):
+    lang_dict = OrderedDict()
+    lang_dict['name'] = names['en']
+    for lang in LANGUAGES:
+        if lang in names:
+            lang_dict[lang] = names[lang]
+        else:
+            lang_dict[lang] = names['en']
+    return lang_dict
+
+def get_supported_names_by_esi(target_type, target_id, default_name):
+    names = {'en': default_name}
+
+    for lang in LANGUAGES:
+        if lang == 'en':
+            continue
+
+        esi_url = 'https://esi.evetech.net/latest/universe/%s/%d?language=%s' % (
+            target_type,
+            target_id,
+            lang,
+        )
+
+        names[lang] = get_json_by_url(esi_url)['name']
+    return get_supported_names(names)
+
+def generate_types_json():
+    print('Create: ' + TYPES_JSON_PATH)
+
+    # # Only categories to which the killmail is issued.
     # include_category_ids = [
     #     6,  # Ship
     #     18, # Drone
@@ -52,121 +161,169 @@ def generate_sde_json():
     include_group_ids = []
     base_path = os.path.join('.', 'sde', 'fsd')
 
-    sde = OrderedDict()
-    sde['version'], ext = os.path.splitext(get_sde_filename())
-    sde['category'] = {}    
-    
+    types = OrderedDict()
+    types['version'] = SETTINGS['version']
+    types['categories'] = OrderedDict()
+
     with open(os.path.join(base_path, 'categoryIDs.yaml')) as file:
-        for i, items in yaml.load(file).items():
+        for i, items in yaml.load(file, Loader=yaml.FullLoader).items():
             if i not in include_category_ids:
                 continue
 
-            sde['category'][i] = {}
-            sde['category'][i]['name'] = items['name']
+            types['categories'][i] = get_supported_names(items['name'])
 
-    sde['group'] = {}
+    types['groups'] = OrderedDict()
     with open(os.path.join(base_path, 'groupIDs.yaml')) as file:
-        for i, items in yaml.load(file).items():
-            if items['categoryID'] not in include_category_ids:
+        for i, items in yaml.load(file, Loader=yaml.FullLoader).items():
+            if items['categoryID'] not in include_category_ids or not items['name']:
                 continue
 
             include_group_ids.append(i)
-            sde['group'][i] = {}
-            sde['group'][i]['name'] = items['name']
-            sde['group'][i]['category_id'] = items['categoryID']
-                
-    sde['type'] = {}
+            types['groups'][i] = get_supported_names(items['name'])
+            types['groups'][i]['category_id'] = items['categoryID']
+
+    types['types'] = {}
     with open(os.path.join(base_path, 'typeIDs.yaml')) as file:
-        for i, items in yaml.load(file).items():
-            if items['groupID'] not in include_group_ids:
+        for i, items in yaml.load(file, Loader=yaml.FullLoader).items():
+            if items['groupID'] not in include_group_ids or not items['name']:
                 continue
 
-            sde['type'][i] = {}
-            sde['type'][i]['name'] = items['name']
-            sde['type'][i]['group_id'] = items['groupID']
+            types['types'][i] = get_supported_names(items['name'])
+            types['types'][i]['group_id'] = items['groupID']
 
-    with open(os.path.join('docs', 'sde.json'), 'w', encoding='utf-8') as file:
-        json.dump(sde, file, indent=4)
+    with open(TYPES_JSON_PATH, 'w', encoding='utf-8') as file:
+        json.dump(types, file, indent=4)
 
+def generate_universes_json():
+    print('Create: ' + UNIVERSES_JSON_PATH)
 
-def generate_universe_ids_json():
-    def get_values(path, *names):
+    level_items = [
+        # level_name, level_id_name, level_filename, parent_level_id_name, level_included_keys
+        ('regions', 'regionID', 'region.staticdata', 'universe_id', []),
+        ('constellations', 'constellationID', 'constellation.staticdata', 'region_id', []),
+        ('systems', 'solarSystemID', 'solarsystem.staticdata', 'constellation_id', ['security']),
+    ]
+
+    universes = OrderedDict(
+        version=SETTINGS['version'],
+        universes=OrderedDict(),
+        regions=OrderedDict(),
+        constellations=OrderedDict(),
+        systems=OrderedDict(),
+    )
+
+    universes['universes'] = copy.deepcopy(DEFAULT_UNIVERSES)
+
+    cached_universes = get_json_by_file(UNIVERSES_JSON_PATH)
+    if not cached_universes:
+        cached_universes = {
+            'regions': {},
+            'constellations': {},
+            'systems': {},
+        }
+
+    def get_universe_values(path, *names):
         values = {}
         with open(path) as file:
-            target_yaml = yaml.load(file)
+            target_yaml = yaml.load(file, Loader=yaml.FullLoader)
             for name in names:
                 values[name] = target_yaml[name]
         return values
 
-    region_dict = OrderedDict()
-    constellation_dict = OrderedDict()
-    solar_system_dict = OrderedDict()
+    def recursive(nest, parent_universe_id, path):
+        for name in os.listdir(path):
+            next_path = os.path.join(path, name)
 
-    universe = OrderedDict()
-    base_path = os.path.join('.', 'sde', 'fsd', 'universe')
-    for universe_name in os.listdir(base_path):
-        universe_path = os.path.join(base_path, universe_name)
-
-        for region_name in os.listdir(universe_path):
-            region_path = os.path.join(universe_path, region_name)
-
-            if not os.path.isdir(region_path):
+            if not os.path.isdir(next_path):
                 continue
 
-            region_values = get_values(
-                os.path.join(region_path, 'region.staticdata'),
-                'regionID'
-            )
-            region_id = str(region_values['regionID'])
-            region_dict[region_id] = region_name
+            level_name, level_id_name, level_filename, parent_level_id_name, level_included_keys = level_items[nest]
+            values = get_universe_values(os.path.join(next_path, level_filename), level_id_name, *level_included_keys)
 
-            for constellation_name in os.listdir(region_path):
-                constellation_path = os.path.join(region_path, constellation_name)
+            universe_id = values[level_id_name]
+            universe_id_str = str(universe_id)
 
-                if not os.path.isdir(constellation_path):
-                    continue
-
-                constellation_values = get_values(
-                    os.path.join(constellation_path, 'constellation.staticdata'),
-                    'constellationID'             
+            if universe_id_str in cached_universes[level_name]:
+                print('Cached: ' + next_path)
+                universes[level_name][universe_id_str] = cached_universes[level_name][universe_id_str]
+            else:
+                print('Add: ' + next_path)
+                universes[level_name][universe_id_str] = get_supported_names_by_esi(
+                    level_name,
+                    universe_id,
+                    name,
                 )
-                constellation_id = str(constellation_values['constellationID'])
-                constellation_dict[constellation_id] = OrderedDict(
-                    name=constellation_name,
-                    region_id=region_id,
-                )
+                universes[level_name][universe_id_str][parent_level_id_name] = parent_universe_id
 
-                for solar_system_name in os.listdir(constellation_path):
-                    solar_system_path = os.path.join(constellation_path, solar_system_name)
+                for key in level_included_keys:
+                    universes[level_name][universe_id_str][key] = values[key]
 
-                    if not os.path.isdir(solar_system_path):
-                        continue
+            if nest <= -1:
+                recursive(nest + 1, universe_id, next_path)
 
-                    print(solar_system_path)
+    base_path = os.path.join('.', 'sde', 'fsd', 'universe')
+    for universe_name in os.listdir(base_path):
+        recursive_path = os.path.join(base_path, universe_name)
+        if os.path.isdir(recursive_path):
+            recursive(0, UNIVERSE_IDS[universe_name], recursive_path)
 
-                    solar_system_values = get_values(
-                        os.path.join(solar_system_path, 'solarsystem.staticdata'),
-                        'solarSystemID',
-                        'security'                 
-                    )
-                    solar_system_id = str(solar_system_values['solarSystemID'])
-                    security = round(solar_system_values['security'], 1)
-                    solar_system_dict[solar_system_id] = [
-                        solar_system_name,
-                        security,
-                        region_id
-                    ]
+    with open(UNIVERSES_JSON_PATH, 'w', encoding='utf-8') as file:
+        json.dump(universes, file, indent=4)
 
-    with open(os.path.join('docs', 'universe_information.json'), 'w', encoding='utf-8') as file:
-        json.dump(universe, file, indent=4)
+def update_version():
+    resources_url = 'https://developers.eveonline.com/resource/resources'
 
+    while(True):
+        try:
+            with urllib.request.urlopen(resources_url) as html:
+                soup = BeautifulSoup(html, 'html.parser')
+            break
+        except urllib.error.HTTPError:
+            print('urllib.error.HTTPError: ' + resources_url)
+            if SETTINGS['version']:
+                return
+
+    for link in soup.find('div', attrs={'class': 'content'}).findAll('a'):
+        sde_url = link['href']
+
+        if 'https://cdn1.eveonline.com/data/sde/tranquility/' in sde_url:
+            parsed = urllib.parse.urlparse(sde_url)
+            sde_filename = parsed.path[1:].split('/')[-1]
+
+            version, ext = os.path.splitext(sde_filename)
+            if ext == '.zip' and 'sde-' in version and '-TRANQUILITY' in version:
+                if SETTINGS['version'] == version:
+                    print('Cached: ' + sde_url)
+                    return
+
+                while(True):
+                    try:
+                        print('Download: ' + sde_url)
+                        with urllib.request.urlopen(sde_url) as data:
+                            with open('sde.zip', mode='wb') as file:
+                                file.write(data.read())
+                        break
+                    except urllib.error.HTTPError:
+                        print('urllib.error.HTTPError: ' + sde_url)
+                        if SETTINGS['version']:
+                            return
+
+                with zipfile.ZipFile('sde.zip') as zfile:
+                    zfile.extractall()
+
+                SETTINGS['version'] = version
 def main():
-    if not DEBUG or not os.path.isdir('sde'):
-        with zipfile.ZipFile(get_sde_filename()) as zfile:
-            zfile.extractall()
+    old_version = SETTINGS['version']
 
-    generate_sde_json()
-    #generate_universe_ids_json()
+    update_version()
+
+    if old_version != SETTINGS['version']:
+        generate_types_json()
+        generate_universes_json()
+
+    with open(SETTINGS_JSON_PATH, 'w', encoding='utf-8') as file:
+        json.dump(SETTINGS, file, indent=4)
 
 if __name__ == '__main__':
     main()
+

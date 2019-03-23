@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="{{ STATIC_URL }}/images/icon.png" type="image/png" />
+
+    {% block head %}
+    <title>{{ SITENAME }}</title>
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@evekatsu" />
+    <meta name="twitter:title" content="{{ SITENAME }}" />
+    <meta name="twitter:url" content="{{ SITEURL }}" />
+    <meta name="twitter:image:src" content="{{ STATIC_URL }}/images/icon.png" />
+    <meta name="twitter:description" content="Various data for EVE Online" />
+  
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ SITENAME }}" />
+    <meta property="og:url" content="{{ SITEURL }}" />
+    <meta property="og:image" content="{{ STATIC_URL }}/images/icon.png" />
+    <meta property="og:description" content="Various data for EVE Online" />
+  
+    {% endblock head %}
+
+    <style type="text/css">
+    footer {
+        padding: 4rem 0;
+        color: #e9ecef;
+        background-color: #343a40;
+    }
+
+    footer .copyright {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ SITEURL }}">{{ SERVICE_NAME }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsEvekatsu" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsEvekatsu">
+            <div class="navbar-nav mr-auto"></div>
+
+            <div>
+                <button id="downloadCSV" class="btn btn-secondary my-2 my-sm-0">Download CSV</button>
+            </div>
+        </div>
+    </div>
+</nav>
+      
+<!-- Page Content -->
+<div class="container">
+    {% block content %}
+    {% endblock content %}
+</div>
+
+<footer class="small">
+    <div class="container">
+        <div class="row">
+        <div class="col-12 text-center copyright">
+            © {{ DATETIME.strftime('%Y') }} Evekatsu
+        </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
