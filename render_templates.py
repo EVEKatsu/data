@@ -3,6 +3,7 @@ import json
 import csv
 import datetime
 from collections import OrderedDict
+
 import jinja2
 
 def get_json_by_file(path):
@@ -104,7 +105,7 @@ def generate_types():
     if not os.path.isdir(base_path):
         os.mkdir(base_path)
 
-    for dir_name in ['categories', 'groups', 'types']:
+    for dir_name in ['groups', 'types']:
         dir_path = os.path.join(base_path, dir_name)
         if not os.path.isdir(dir_path):
             os.mkdir(dir_path)
