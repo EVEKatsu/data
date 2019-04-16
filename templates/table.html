@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
-{% block content %}
 
+{% block right_menuitems %}
+<div>
+    <button id="downloadCsv" class="btn btn-secondary my-2 my-sm-0">Download CSV</button>
+</div>
+{% endblock right_menuitems %}
+
+
+{% block content %}
 {% if title %}
 <div style="margin: 20px 0px">
     <h1 id="sitename">{{ title }}</h1>
@@ -47,69 +54,68 @@
     </tbody>
 </table>
 
-<script>
-document.getElementById("downloadCSV").onclick = function() {
-    var csv = [];
-    var table = document.getElementsByTagName("table")[0];
-
-    var trs = table.getElementsByTagName("tr");
-    for (var i = 0; i < trs.length; i++) {
-        var tds = trs[i].getElementsByTagName("td");
-        if (tds.length == 0) {
-            continue;
-        }
-
-        var columns = []
-        for (var j = 0; j < tds.length; j++) {
-            columns.push(tds[j].innerText.trim());
-        }
-
-        csv.push(columns);
-    }
-
-    var ths = table.getElementsByTagName("th");
-    var headers = [];
-    for (var i = 0; i < ths.length; i++) {
-        headers.push(ths[i].innerText.trim());
-    }
-    csv.unshift(headers);
-
-    var csv_string = csv.map(row => {
-        return row.map(str => {
-            return '"' + (str ? str.replace(/"/g, '""') : '') + '"';
-        });
-    }).map(row => {
-        return row.join(",");
-    }).join("\n");
-
-    var bom = '\uFEFF';
-    var blob = new Blob([bom, csv_string], { type: "text/csv" });
-    var name = document.getElementById("sitename");
-    if (typeof name === 'undefined') {
-        name = "download.csv";
-    } else {
-        name = name.innerText + ".csv";
-    }
-    var anchor = document.createElement("a");
-
-    // ie
-    if (window.navigator.msSaveBlob) {
-        window.navigator.msSaveBlob(blob, name);
-    // chrome, firefox, etc.
-    } else if (window.URL && anchor.download !== undefined) {
-        anchor.download = name;
-        anchor.href = window.URL.createObjectURL(blob);
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.parentNode.removeChild(anchor);                    
-    } else {
-        window.location.href = "data:attachment/csv;charset=utf-8," + encodeURIComponent(bom + data);
-    }
-};
-</script>
-
 <div id="version" style="margin-top: 50px; margin-bottom: 30px" class="text-center">
     <a href="https://cdn1.eveonline.com/data/sde/tranquility/{{ VERSION }}.zip">{{ VERSION }}</a>
 </div>
 
+<script>
+document.getElementById("downloadCsv").onclick = () => {
+    var csv = []
+    var table = document.getElementsByTagName("table")[0]
+
+    var trs = table.getElementsByTagName("tr")
+    for (var i = 0; i < trs.length; i++) {
+        var tds = trs[i].getElementsByTagName("td")
+        if (tds.length == 0) {
+            continue
+        }
+
+        var columns = []
+        for (var j = 0; j < tds.length; j++) {
+            columns.push(tds[j].innerText.trim())
+        }
+
+        csv.push(columns)
+    }
+
+    var ths = table.getElementsByTagName("th")
+    var headers = []
+    for (var i = 0; i < ths.length; i++) {
+        headers.push(ths[i].innerText.trim())
+    }
+    csv.unshift(headers)
+
+    var csv_string = csv.map(row => {
+        return row.map(str => {
+            return '"' + (str ? str.replace(/"/g, '""') : '') + '"'
+        })
+    }).map(row => {
+        return row.join(",")
+    }).join("\n")
+
+    var bom = '\uFEFF'
+    var blob = new Blob([bom, csv_string], { type: "text/csv" })
+    var name = document.getElementById("sitename")
+    if (typeof name === 'undefined') {
+        name = "download.csv"
+    } else {
+        name = name.innerText + ".csv"
+    }
+    var anchor = document.createElement("a")
+
+    // ie
+    if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(blob, name)
+    // chrome, firefox, etc.
+    } else if (window.URL && anchor.download !== undefined) {
+        anchor.download = name
+        anchor.href = window.URL.createObjectURL(blob)
+        document.body.appendChild(anchor)
+        anchor.click()
+        anchor.parentNode.removeChild(anchor)
+    } else {
+        window.location.href = "data:attachment/csv;charset=utf-8," + encodeURIComponent(bom + data)
+    }
+}
+</script>
 {% endblock content %}

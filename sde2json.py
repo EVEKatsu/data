@@ -77,7 +77,7 @@ def get_json_by_file(path):
     if os.path.isfile(path):
         with open(path, 'r') as file:
             return json.load(file)
-    return None
+    return {}
 
 SETTINGS = get_json_by_file(SETTINGS_JSON_PATH)
 if not SETTINGS:
@@ -326,4 +326,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

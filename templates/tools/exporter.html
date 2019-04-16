@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="margin: 20px 0px">
+    <h1 id="sitename">Contents</h1>
+</div>        
+
+
+<div class="form-group">
+    <label>Options</label>
+
+    <!--
+    <div class="form-inline">
+        
+        <input style="width: 50%" type="text" class="form-control" id="page" aria-describedby="optionsHelp" placeholder="1">
+        <label class="form-check-label" for="page">Page</label>
+    </div>
+    -->
+    <div class="form-inline">
+    <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+            <label class="form-check-label" for="clearCache">Clear cache</label>
+        </div>
+        <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                <label class="form-check-label" for="clearCache">Clear cache</label>
+            </div>
+            <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                    <label class="form-check-label" for="clearCache">Clear cache</label>
+                </div>
+                <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                        <label class="form-check-label" for="clearCache">Clear cache</label>
+                    </div>
+                    <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                            <label class="form-check-label" for="clearCache">Clear cache</label>
+                        </div>
+                        <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                                <label class="form-check-label" for="clearCache">Clear cache</label>
+                            </div>
+                            <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                                    <label class="form-check-label" for="clearCache">Clear cache</label>
+                                </div>
+                                <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="clearCache" aria-describedby="optionsHelp">
+                                        <label class="form-check-label" for="clearCache">Clear cache</label>
+                                    </div>
+                                    </div>
+
+</div>
+
+
+<div id="version" style="margin-top: 50px; margin-bottom: 30px" class="text-center">
+    <a href="https://cdn1.eveonline.com/data/sde/tranquility/{{ VERSION }}.zip">{{ VERSION }}</a>
+</div>
+
+
+<script>
+window.onload = () => {
+    getJson("https://evekatsu.github.io/data/types.json", (targetJson) => {
+        console.log(targetJson)
+    })
+}
+
+const getJson = (url, func) => {
+    var req = new XMLHttpRequest()
+    req.onreadystatechange = () => {
+        if (req.readyState == 4 && req.status == 200) {
+            func(JSON.parse(req.responseText))
+        }
+    }
+    req.open("GET", url, false)
+    req.send(null)
+}
+
+const downloadCsv = () => {
+
+}
+
+document.getElementById("downloadCsv").onclick = () => {
+    var csv = []
+    var table = document.getElementsByTagName("table")[0]
+
+    var trs = table.getElementsByTagName("tr")
+    for (var i = 0; i < trs.length; i++) {
+        var tds = trs[i].getElementsByTagName("td")
+        if (tds.length == 0) {
+            continue
+        }
+
+        var columns = []
+        for (var j = 0; j < tds.length; j++) {
+            columns.push(tds[j].innerText.trim())
+        }
+
+        csv.push(columns)
+    }
+
+    var ths = table.getElementsByTagName("th")
+    var headers = []
+    for (var i = 0; i < ths.length; i++) {
+        headers.push(ths[i].innerText.trim())
+    }
+    csv.unshift(headers)
+
+    var csv_string = csv.map(row => {
+        return row.map(str => {
+            return '"' + (str ? str.replace(/"/g, '""') : '') + '"'
+        })
+    }).map(row => {
+        return row.join(",")
+    }).join("\n")
+
+    var bom = '\uFEFF'
+    var blob = new Blob([bom, csv_string], { type: "text/csv" })
+    var name = document.getElementById("sitename")
+    if (typeof name === 'undefined') {
+        name = "download.csv"
+    } else {
+        name = name.innerText + ".csv"
+    }
+    var anchor = document.createElement("a")
+
+    // ie
+    if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(blob, name)
+    // chrome, firefox, etc.
+    } else if (window.URL && anchor.download !== undefined) {
+        anchor.download = name
+        anchor.href = window.URL.createObjectURL(blob)
+        document.body.appendChild(anchor)
+        anchor.click()
+        anchor.parentNode.removeChild(anchor)
+    } else {
+        window.location.href = "data:attachment/csv;charset=utf-8," + encodeURIComponent(bom + data)
+    }
+}
+</script>
+{% endblock content %}

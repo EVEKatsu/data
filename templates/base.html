@@ -19,13 +19,12 @@
     <meta name="twitter:url" content="{{ SITEURL }}" />
     <meta name="twitter:image:src" content="{{ STATIC_URL }}/images/icon.png" />
     <meta name="twitter:description" content="Various data for EVE Online" />
-  
+
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ SITENAME }}" />
     <meta property="og:url" content="{{ SITEURL }}" />
     <meta property="og:image" content="{{ STATIC_URL }}/images/icon.png" />
     <meta property="og:description" content="Various data for EVE Online" />
-  
     {% endblock head %}
 
     <style type="text/css">
@@ -55,9 +54,8 @@
         <div class="collapse navbar-collapse" id="navbarsEvekatsu">
             <div class="navbar-nav mr-auto"></div>
 
-            <div>
-                <button id="downloadCSV" class="btn btn-secondary my-2 my-sm-0">Download CSV</button>
-            </div>
+            {% block right_menuitems %}
+            {% endblock right_menuitems %}
         </div>
     </div>
 </nav>

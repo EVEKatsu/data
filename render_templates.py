@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import csv
@@ -38,8 +39,8 @@ LANGUAGES = OrderedDict(
 )
 
 DEFAULT_RENDER_KWARGS = {
-    'SITENAME': 'Evekatsu',
-    'SERVICE_NAME': 'Evekatsu',
+    'SITENAME': 'Evekatsu Data',
+    'SERVICE_NAME': 'Evekatsu Data',
     'SITEURL': BASE_URL,
     'STATIC_URL': BASE_URL + '/static',
     'DATETIME': datetime.datetime.now(),
@@ -95,12 +96,24 @@ def add_link_to_languages_item(languages_item, getter):
 
     return item
 
-def generate_types():
-    siteurl = BASE_URL + '/types'
-    DEFAULT_RENDER_KWARGS['SITEURL'] = siteurl
-    DEFAULT_RENDER_KWARGS['SERVICE_NAME'] = 'Evekatsu Types'
+def render_index():
+    generate_html('index.html', os.path.join('.', 'docs', 'index.html'))
 
+def render_tools():
+    base_path = os.path.join('.', 'docs', 'tools')
+
+    if not os.path.isdir(base_path):
+        os.mkdir(base_path)
+
+    for filename in os.listdir(os.path.join('.', 'templates', 'tools')):
+        ext = os.path.splitext(filename)[1]
+        if ext == '.html':
+            generate_html(os.path.join('tools', filename), os.path.join(base_path, filename))
+
+
+def render_types():
     base_path = os.path.join('.', 'docs', 'types')
+    siteurl = BASE_URL + '/types'
 
     if not os.path.isdir(base_path):
         os.mkdir(base_path)
@@ -178,12 +191,9 @@ def generate_types():
         writer.writerow(types['index']['header'])
         writer.writerows(types['index']['items'])
 
-def generate_universes():
-    siteurl = BASE_URL + '/universes'
-    DEFAULT_RENDER_KWARGS['SITEURL'] = siteurl
-    DEFAULT_RENDER_KWARGS['SERVICE_NAME'] = 'Evekatsu Universes'
-
+def render_universes():
     base_path = os.path.join('.', 'docs', 'universes')
+    siteurl = BASE_URL + '/universes'
 
     if not os.path.isdir(base_path):
         os.mkdir(base_path)
@@ -298,8 +308,14 @@ def generate_universes():
         writer.writerows(systems['index']['items'])
 
 def main():
-    generate_types()
-    generate_universes()
+    if len(sys.argv) < 2:
+        render_types()
+        render_universes()
+        render_index()
+        render_tools()
+    else:
+        for func_name in sys.argv[1:]:
+            globals()[func_name]()
 
 if __name__ == '__main__':
     main()

@@ -2189,6 +2189,48 @@
         },
         "2114747946": {
             "name": "Norwegian ForestCat"
+        },
+        "2114776539": {
+            "name": "Chad HMS"
+        },
+        "2114862646": {
+            "name": "varuhait eldersha"
+        },
+        "96818406": {
+            "name": "niwa gr"
+        },
+        "2114815396": {
+            "name": "ryvius sun"
+        },
+        "96498921": {
+            "name": "Naethali Windrunner"
+        },
+        "93407012": {
+            "name": "COOL zeion"
+        },
+        "94480316": {
+            "name": "Al Efon"
+        },
+        "2113715170": {
+            "name": "Julius01 Caesar"
+        },
+        "2114864264": {
+            "name": "Neini Maskirovka"
+        },
+        "2114891523": {
+            "name": "50 naka"
+        },
+        "2113340828": {
+            "name": "Naki Yukihara"
+        },
+        "92503454": {
+            "name": "Elvenris Starblade"
+        },
+        "1675828930": {
+            "name": "Fug Riplpl"
+        },
+        "2114204558": {
+            "name": "Pentium M"
         }
     },
     "corporation": {
@@ -2399,6 +2441,10 @@
         "98210283": {
             "name": "NACHO Wormhole noT Found",
             "ticker": "N404"
+        },
+        "1000006": {
+            "name": "Deep Core Mining Inc.",
+            "ticker": "DCMI"
         }
     },
     "alliance": {
