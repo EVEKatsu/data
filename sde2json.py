@@ -156,6 +156,7 @@ def generate_types_json():
         66, # Structure Module
         87, # Fighter
         91, # Super Kerr-Induced Nanocoatings
+        350001, # Infantry
     ]
 
     include_group_ids = []
