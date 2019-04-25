@@ -130,9 +130,11 @@ def generate_types_json():
     #     18, # Drone
     #     22, # Deployable
     #     23, # Starbase
+    #     40, # Sovereignty Structures
     #     46, # Orbitals
     #     65, # Structure
     #     87, # Fighter
+    #     350001, # Infantry
     # ]
 
     include_category_ids = [
@@ -149,6 +151,7 @@ def generate_types_json():
         25, # Asteroid
         30, # Apparel
         32, # Subsystem
+        40, # Sovereignty Structures
         42, # Planetary Resources
         43, # Planetary Commodities
         46, # Orbitals
